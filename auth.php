@@ -140,6 +140,14 @@ class auth_plugin_googleoauth2 extends auth_plugin_base {
                     $params['client_secret'] = get_config('auth/googleoauth2', 'linkedinclientsecret');
                     $requestaccesstokenurl = 'https://www.linkedin.com/uas/oauth2/accessToken';
                     break;
+                case 'ao':
+                    $params['grant_type'] = 'authorization_code';
+                    $params['code'] = $authorizationcode;
+                    $params['redirect_uri'] = $CFG->wwwroot . '/auth/googleoauth2/ao_redirect.php';
+                    $params['client_id'] = get_config('auth/googleoauth2', 'ao_client_id');
+                    $params['client_secret'] = get_config('auth/googleoauth2', 'ao_client_secret');
+                    $requestaccesstokenurl = get_config('auth/googleoauth2', 'ao_oauth_url') . "/token";
+                    break;
                 default:
                     throw new moodle_exception('unknown_oauth2_provider');
                     break;
@@ -159,6 +167,7 @@ class auth_plugin_googleoauth2 extends auth_plugin_base {
             switch ($authprovider) {
                 case 'google':
                 case 'linkedin':
+                case 'ao':
                     $postreturnvalues = json_decode($postreturnvalues);
                     $accesstoken = $postreturnvalues->access_token;
                     //$refreshtoken = $postreturnvalues->refresh_token;
@@ -246,6 +255,15 @@ class auth_plugin_googleoauth2 extends auth_plugin_base {
                         $postreturnvalues = $curl->get('https://api.linkedin.com/v1/people/~:(first-name,last-name,email-address,location:(name,country:(code)))', $params);
                         $linkedinuser = json_decode($postreturnvalues);
                         $useremail = $linkedinuser->emailAddress;
+                        $verified = 1;
+                        break;
+
+                    case 'ao':
+                        $url = get_config('auth/googleoauth2', 'ao_soap_url');
+                        $client = new SoapClient($url . "?wsdl");
+                        $client->__setCookie('oauth2_access_token', $accesstoken);
+                        $ao_user = $client->getUserDetails();
+                        $useremail = $ao_user['Email1'];
                         $verified = 1;
                         break;
 
@@ -341,6 +359,11 @@ class auth_plugin_googleoauth2 extends auth_plugin_base {
                             if (!empty($linkedinuser->location->name)) {
                                 $newuser->city = $linkedinuser->location->name;
                             }
+                            break;
+
+                        case 'ao':
+                            $newuser->firstname = $ao_user['FirstName'];
+                            $newuser->lastname = $ao_user['LastName'];
                             break;
 
                         default:
@@ -497,6 +520,21 @@ class auth_plugin_googleoauth2 extends auth_plugin_base {
         }
         if (!isset ($config->linkedinclientsecret)) {
             $config->linkedinclientsecret = '';
+        }
+        if (!isset ($config->ao_association_name)) {
+            $config->ao_association_name = '';
+        }
+        if (!isset ($config->ao_client_id)) {
+            $config->ao_client_id = '';
+        }
+        if (!isset ($config->ao_client_secret)) {
+            $config->ao_client_secret = '';
+        }
+        if (!isset ($config->ao_oauth_url)) {
+            $config->ao_oauth_url = '';
+        }
+        if (!isset ($config->ao_soap_url)) {
+            $config->ao_soap_url = '';
         }
         if (!isset($config->googleipinfodbkey)) {
             $config->googleipinfodbkey = '';
@@ -775,6 +813,7 @@ class auth_plugin_googleoauth2 extends auth_plugin_base {
 
         echo '</td></tr>';
 
+        $this->render_ao_settings($OUTPUT, $config);
 
         // IPinfoDB
 
@@ -868,6 +907,44 @@ class auth_plugin_googleoauth2 extends auth_plugin_base {
         echo '</table>';
     }
 
+    function render_ao_settings($OUTPUT, $config) {
+
+        echo "<pre>";
+        var_export( $config );
+        echo "</pre>";
+
+        $this->render_setting($OUTPUT, 'ao_association_name', $config->ao_association_name);
+        $this->render_setting($OUTPUT, 'ao_client_id', $config->ao_client_id);
+        $this->render_setting($OUTPUT, 'ao_client_secret', $config->ao_client_secret);
+        $this->render_setting($OUTPUT, 'ao_oauth_url', $config->ao_oauth_url);
+        $this->render_setting($OUTPUT, 'ao_soap_url', $config->ao_soap_url);
+
+    }
+
+    function render_setting($OUTPUT, $setting, $value) {
+
+        echo "<tr><td align='right'><label for='$setting'>";
+
+        print_string("auth_{$setting}_key", 'auth_googleoauth2');
+
+        echo '</label></td><td>';
+
+        echo html_writer::empty_tag('input',
+            array('type' => 'text', 'id' => $setting, 'name' => $setting,
+                  'class' => $setting, 'value' => $value));
+
+        if (isset($err[$setting])) {
+            echo $OUTPUT->error_text($err[$setting]);
+        }
+
+        echo '</td><td>';
+
+        print_string("auth_{$setting}_description", 'auth_googleoauth2');
+
+        echo '</td></tr>';
+
+    }
+
     /**
      * Processes and stores configuration data for this authentication plugin.
      */
@@ -903,6 +980,21 @@ class auth_plugin_googleoauth2 extends auth_plugin_base {
         if (!isset ($config->linkedinclientsecret)) {
             $config->linkedinclientsecret = '';
         }
+        if (!isset ($config->ao_association_name)) {
+            $config->ao_association_name = '';
+        }
+        if (!isset ($config->ao_client_id)) {
+            $config->ao_client_id = '';
+        }
+        if (!isset ($config->ao_client_secret)) {
+            $config->ao_client_secret = '';
+        }
+        if (!isset ($config->ao_oauth_url)) {
+            $config->ao_oauth_url = '';
+        }
+        if (!isset ($config->ao_soap_url)) {
+            $config->ao_soap_url = '';
+        }
         if (!isset ($config->googleipinfodbkey)) {
             $config->googleipinfodbkey = '';
         }
@@ -924,6 +1016,11 @@ class auth_plugin_googleoauth2 extends auth_plugin_base {
         set_config('githubclientsecret', $config->githubclientsecret, 'auth/googleoauth2');
         set_config('linkedinclientid', $config->linkedinclientid, 'auth/googleoauth2');
         set_config('linkedinclientsecret', $config->linkedinclientsecret, 'auth/googleoauth2');
+        set_config('ao_association_name', $config->ao_association_name, 'auth/googleoauth2');
+        set_config('ao_client_id', $config->ao_client_id, 'auth/googleoauth2');
+        set_config('ao_client_secret', $config->ao_client_secret, 'auth/googleoauth2');
+        set_config('ao_oauth_url', $config->ao_oauth_url, 'auth/googleoauth2');
+        set_config('ao_soap_url', $config->ao_soap_url, 'auth/googleoauth2');
         set_config('googleipinfodbkey', $config->googleipinfodbkey, 'auth/googleoauth2');
 		set_config('googleuserprefix', core_text::strtolower($config->googleuserprefix), 'auth/googleoauth2');
         set_config('oauth2displaybuttons', $config->oauth2displaybuttons, 'auth/googleoauth2');

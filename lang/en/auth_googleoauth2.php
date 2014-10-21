@@ -62,6 +62,16 @@ $string['auth_linkedinclientid'] = 'Your API/Secret keys can be generated in you
 $string['auth_linkedinclientid_key'] = 'Linkedin API Key';
 $string['auth_linkedinclientsecret'] = 'See above.';
 $string['auth_linkedinclientsecret_key'] = 'Linkedin Secret key';
+$string['auth_ao_association_name_key'] = 'Association Online Association Name';
+$string['auth_ao_association_name_description'] = 'The name of the association that the AO site belongs to. This will be used for the login button, where it will say "Login with [Association Name]".';
+$string['auth_ao_client_id_key'] = 'Association Online Client ID';
+$string['auth_ao_client_id_description'] = 'To get a Client ID/Secret pair, contact your Association Online administrator.';
+$string['auth_ao_client_secret_key'] = 'Association Online Client Secret';
+$string['auth_ao_client_secret_description'] = 'See above';
+$string['auth_ao_oauth_url_key'] = 'Association Online OAuth2 URL';
+$string['auth_ao_oauth_url_description'] = 'This is the path to the OAuth2 confirmation form on the AO server. This should not include "/token" or "/auth" - Moodle will append these to the end of the URL you enter here. For example, "http://example.associationonline.com.au/oauth"';
+$string['auth_ao_soap_url_key'] = 'Association Online Web Service URL';
+$string['auth_ao_soap_url_description'] = 'This path is to the SOAP web service which will be used to request the AO users details (e.g. first name, last name, email). For example, http://example.associationonline.com.au/soap/clients/contact"';
 $string['auth_messengerclientid'] = 'Your Client ID/Secret can be generated in your <a href="https://account.live.com/developers/applications">Windows Live apps page</a>:
 <br/>Redirect domain: {$a->domain}';
 $string['auth_messengerclientid_key'] = 'Messenger Client ID';

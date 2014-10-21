@@ -62,13 +62,29 @@ class user_loggedin extends \core\event\base {
     }
 
     /**
+     * Sets the "level" field of the event to self::LEVEL_OTHER.
+     * Behaves differently if we are in moodle version 2.6 or 2.7, as "level" was renamed to "edulevel".
+     * https://tracker.moodle.org/browse/MDL-44069
+     */
+    private function initLevel() {
+
+        global $CFG;
+        if ($CFG->version < 2013111899) {
+            $this->data['level'] = self::LEVEL_OTHER;
+        } else {
+            $this->data['edulevel'] = self::LEVEL_OTHER;
+        }
+
+    }
+
+    /**
      * Init method.
      *
      * @return void
      */
     protected function init() {
         $this->data['crud'] = 'r';
-        $this->data['edulevel'] = self::LEVEL_OTHER;
+        $this->initLevel();
         $this->data['objecttable'] = 'user';
     }
 

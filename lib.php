@@ -150,6 +150,20 @@ function auth_googleoauth2_render_buttons() {
         </div>
     </div>';
 
+    $a->providername = get_config('auth/googleoauth2', 'ao_association_name');
+    $providerisenabled = get_config('auth/googleoauth2', 'ao_client_id');
+    $providerscount = $providerisenabled?$providerscount+1:$providerscount;
+	$displayprovider = ((empty($authprovider) || $authprovider == 'ao' || $allauthproviders) && $providerisenabled);
+	$providerdisplaystyle = $displayprovider?'display:inline-block;padding:10px;':'display:none;';
+    $ao_url = get_config('auth/googleoauth2', 'ao_oauth_url');
+    $ao_client_id = get_config('auth/googleoauth2', 'ao_client_id');
+	$html .= '<div class="singinprovider" style="'. $providerdisplaystyle .'">
+            <a class="ao" href="' . $ao_url . '/auth?client_id='. $ao_client_id .'&redirect_uri='. $CFG->wwwroot .'/auth/googleoauth2/ao_redirect.php&state='.auth_googleoauth2_get_state_token().'&scope=clients.contact.getUserDetails&response_type=code">
+                '.get_string('auth_sign-in_with','auth_googleoauth2', $a).'
+            </a>
+        </div>
+    </div>';
+
 	if (!empty($authprovider) and $providerscount>1) {
 		$html .= '<br /><br /> 
            <div class="moreproviderlink">
