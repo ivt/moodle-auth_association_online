@@ -262,7 +262,7 @@ class auth_plugin_googleoauth2 extends auth_plugin_base {
                         $url = get_config('auth/googleoauth2', 'ao_soap_url');
                         $client = new SoapClient($url . "?wsdl");
                         $client->__setCookie('oauth2_access_token', $accesstoken);
-                        $ao_user = $client->getUserDetails();
+                        $ao_user = $client->getBasicUserDetails();
                         $useremail = $ao_user['Email1'];
                         $verified = 1;
                         break;

@@ -158,7 +158,7 @@ function auth_googleoauth2_render_buttons() {
     $ao_url = get_config('auth/googleoauth2', 'ao_oauth_url');
     $ao_client_id = get_config('auth/googleoauth2', 'ao_client_id');
 	$html .= '<div class="singinprovider" style="'. $providerdisplaystyle .'">
-            <a class="ao" href="' . $ao_url . '/auth?client_id='. $ao_client_id .'&redirect_uri='. $CFG->wwwroot .'/auth/googleoauth2/ao_redirect.php&state='.auth_googleoauth2_get_state_token().'&scope=clients.contact.getUserDetails&response_type=code">
+            <a class="ao" href="' . $ao_url . '/auth?client_id='. $ao_client_id .'&redirect_uri='. $CFG->wwwroot .'/auth/googleoauth2/ao_redirect.php&state='.auth_googleoauth2_get_state_token().'&scope=clients.contact.getBasicUserDetails&response_type=code">
                 '.get_string('auth_sign-in_with','auth_googleoauth2', $a).'
             </a>
         </div>
