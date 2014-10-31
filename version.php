@@ -16,7 +16,7 @@
 // can be see at <http://www.gnu.org/licenses/>.
 
 /**
- * Google/Facebook/Messanger Oauth2 authentication plugin version specification.
+ * Association Online OAuth2 authentication.
  *
  * @package    auth
  * @subpackage googleoauth2

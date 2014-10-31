@@ -21,6 +21,6 @@ $loginurl = '/login/index.php';
 if (!empty($CFG->alternateloginurl)) {
     $loginurl = $CFG->alternateloginurl;
 }
-$url = new moodle_url($loginurl, array('code' => $code, 'authprovider' => 'ao'));
+$url = new moodle_url($loginurl, array('code' => $code));
 redirect($url);
 ?>
