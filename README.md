@@ -2,7 +2,7 @@ This plugin adds "Sign-in with Association Online" button on the login page. The
 
 ### Installation:
 
-1. add the plugin into /auth/googleoauth2/
+1. add the plugin into /auth/association_online/
 2. in the Moodle administration, enable the plugin (Admin block > Plugins > Authentication)
 3. in the plugin settings, follow the displayed instructions.
 

@@ -15,20 +15,16 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * auth_googleoauth2 user loggedin event.
- *
- * @package    auth_googleoauth2
  * @copyright  2013 Jerome Mouneyrac
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace auth_googleoauth2\event;
+namespace auth_association_online\event;
 defined('MOODLE_INTERNAL') || die();
 
+require_once( $CFG->dirroot . '/auth/association_online/constants.php' );
+
 /**
- * auth_googleoauth2 user loggedin event class.
- *
- * @package    auth_googleoauth2
  * @copyright  2013 Jerome Mouneyrac
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -49,7 +45,7 @@ class user_loggedin extends \core\event\base {
      * @return string
      */
     public static function get_name() {
-        return get_string('event_user_loggedin', 'auth_googleoauth2');
+        return get_string('event_user_loggedin', \Constants::PLUGIN_NAME);
     }
 
     /**

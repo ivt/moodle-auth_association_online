@@ -16,17 +16,17 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'auth_google', language 'en'
+ * Strings for component 'auth_association_online', language 'en'
  *
- * @package   auth_google
  * @author Jerome Mouneyrac
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 $string['pluginname'] = 'Association Online';
-$string['auth_googleuserprefix'] = 'The created user\'s username will start with this prefix. On a basic Moodle site you don\'t need to change it.';
-$string['auth_googleuserprefix_key'] = 'Username prefix';
-$string['auth_googleoauth2description'] = 'Allow a user to connect to the site with an Association Online account. The first time the user connects with an AO provider, a new account is created. <a href="'.$CFG->wwwroot.'/admin/search.php?query=authpreventaccountcreation">Prevent account creation when authenticating</a> <b>must</b> be unset.';
+$string['auth_association_onlinedescription'] = 'This authnetication plugin will allow members of an Association Online website to login to Moodle with their AO account.';
+$string['auth_user_prefix'] = 'The created user\'s username will start with this prefix. On a basic Moodle site you don\'t need to change it.';
+$string['auth_user_prefix_key'] = 'Username prefix';
+$string['auth_oauth2description'] = 'Allow a user to connect to the site with an Association Online account. The first time the user connects with an AO provider, a new account is created. <a href="'.$CFG->wwwroot.'/admin/search.php?query=authpreventaccountcreation">Prevent account creation when authenticating</a> <b>must</b> be unset.';
 $string['auth_ao_association_name_key'] = 'Association Online Association Name';
 $string['auth_ao_association_name_description'] = 'The name of the association that the AO site belongs to. This will be used for the login button, where it will say "Login with [Association Name]".';
 $string['auth_ao_client_id_key'] = 'Association Online Client ID';
@@ -38,9 +38,8 @@ $string['auth_ao_oauth_url_description'] = 'This is the path to the OAuth2 confi
 $string['auth_ao_soap_url_key'] = 'Association Online Web Service URL';
 $string['auth_ao_soap_url_description'] = 'This path is to the SOAP web service which will be used to request the AO users details (e.g. first name, last name, email). For example, http://example.associationonline.com.au/soap/clients/contact"';
 
-$string['auth_googlesettings'] = 'Settings';
+$string['auth_association_online_settings'] = 'Settings';
 $string['couldnotauthenticate'] = 'The authentication failed - Please try to sign-in again.';
-$string['couldnotgetgoogleaccesstoken'] = 'The authentication provider sent us a communication error. Please try to sign-in again.';
 $string['couldnotauthenticateuserlogin'] = 'Authentication method error.<br/>
 Please try to login again with your username and password.<br/>
 <br/>

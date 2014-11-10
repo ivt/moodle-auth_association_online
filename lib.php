@@ -17,12 +17,13 @@
 /**
  * This file contains lib functions for the Oauth2 authentication plugin.
  *
- * @package   auth_googleoauth2
  * @copyright 2013 Jerome Mouneyrac {@link http://jerome.mouneyrac.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined( 'MOODLE_INTERNAL' ) || die();
+
+require_once( $CFG->dirroot . '/auth/association_online/constants.php' );
 
 /**
  * oauth_add_to_log is a quick hack to avoid add_to_log debugging
@@ -45,7 +46,7 @@ function oauth_add_to_log( $courseid, $module, $action, $url = '', $info = '', $
  *
  * @return string the state token.
  */
-function auth_googleoauth2_get_state_token()
+function auth_association_online_get_state_token()
 {
 	// Create a state token to prevent request forgery.
 	// Store it in the session for later validation.
@@ -58,31 +59,31 @@ function auth_googleoauth2_get_state_token()
 }
 
 /**
- * For backwards compatibility only: this echoes the html created in auth_googleoauth2_render_buttons
+ * For backwards compatibility only: this echoes the html created in auth_association_online_render_buttons
  */
-function auth_googleoauth2_display_buttons()
+function auth_association_online_display_buttons()
 {
-	echo auth_googleoauth2_render_buttons();
+	echo auth_association_online_render_buttons();
 }
 
-function auth_googleoauth2_render_buttons()
+function auth_association_online_render_buttons()
 {
 	global $CFG;
 	$html = '';
 
 	$a = new stdClass();
-	$isEnabled = get_config( 'auth/googleoauth2', 'ao_client_id' );
-	if ( !is_enabled_auth( 'googleoauth2' ) || !$isEnabled )
+	$isEnabled = get_config( Constants::CONFIG_PATH, 'ao_client_id' );
+	if ( !is_enabled_auth( Constants::AUTH_TYPE ) || !$isEnabled )
 		return '';
 
-	$a->providerName = get_config( 'auth/googleoauth2', 'ao_association_name' );
-	$aoUrl           = get_config( 'auth/googleoauth2', 'ao_oauth_url' );
-	$aoClientId      = get_config( 'auth/googleoauth2', 'ao_client_id' );
+	$a->providerName = get_config( Constants::CONFIG_PATH, 'ao_association_name' );
+	$aoUrl           = get_config( Constants::CONFIG_PATH, 'ao_oauth_url' );
+	$aoClientId      = get_config( Constants::CONFIG_PATH, 'ao_client_id' );
 
-	$link = $aoUrl . '/auth?client_id=' . $aoClientId . '&redirect_uri=' . $CFG->wwwroot . '/auth/googleoauth2/ao_redirect.php&state=' . auth_googleoauth2_get_state_token() . '&scope=clients.contact.getBasicUserDetails&response_type=code';
+	$link = $aoUrl . '/auth?client_id=' . $aoClientId . '&redirect_uri=' . $CFG->wwwroot . '/auth/association_online/ao_redirect.php&state=' . auth_association_online_get_state_token() . '&scope=clients.contact.getBasicUserDetails&response_type=code';
 	$html .= '<div class="singinprovider">';
 	$html .= '<a class="ao" href="' . $link . '">';
-	$html .= get_string( 'auth_sign-in_with', 'auth_googleoauth2', $a );
+	$html .= get_string( 'auth_sign-in_with', Constants::PLUGIN_NAME, $a );
 	$html .= '</a></div></div>';
 
 	return $html;
