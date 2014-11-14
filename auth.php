@@ -132,6 +132,7 @@ class auth_plugin_association_online extends auth_plugin_base
 
 			$postreturnvalues = $curl->post( $requestaccesstokenurl, $params );
 			$postreturnvalues = json_decode( $postreturnvalues );
+
 			$accesstoken      = $postreturnvalues->access_token;
 
 			//with access token request by curl the email address
@@ -540,27 +541,15 @@ class auth_plugin_association_online extends auth_plugin_base
 		return "$ao_id,$uuid";
 	}
 
-	/**
-	 * Returns an array with two elements - the first is the ao id, the second is the site UUID that
-	 * the ao id belongs to.
-	 * @param $ao_id_with_uuid
-	 * @return array
-	 */
-	private static function parse_ao_id_with_uuid( $ao_id_with_uuid )
-	{
-		return explode( ',', $ao_id_with_uuid );
-	}
-
 	private function get_user_from_ao_id( $ao_id )
 	{
 		global $DB, $CFG;
 
-		$ao_id_field_id = $this->get_ao_field_id();
-
+		$ao_id_field_id  = $this->get_ao_field_id();
 		$ao_id_with_uuid = $this->ao_id_with_site_uuid( $ao_id );
-
-		$existing_ao_id = $DB->get_record_sql(
-			"SELECT * FROM user_info_data WHERE fieldid = :fieldid AND data = :data",
+		$table           = $DB->get_prefix() . "user_info_data";
+		$existing_ao_id  = $DB->get_record_sql(
+			"SELECT * FROM $table WHERE fieldid = :fieldid AND data = :data",
 			array(
 				'fieldid' => $ao_id_field_id,
 			    'data'    => $ao_id_with_uuid,
