@@ -37,10 +37,9 @@ class AoUuid
 
 	private static function getUuidFromServer()
 	{
-		$soapUrl = get_config( Constants::CONFIG_PATH, 'ao_soap_url' );
-		$parts = parse_url( $soapUrl );
+		$url   = get_config( Constants::CONFIG_PATH, 'ao_url' );
 
-		$wsdl = $parts[ 'scheme' ] . "://" . $parts[ 'host' ] . '/soap/specialRequest?wsdl';
+		$wsdl = $url . '/soap/specialRequest?wsdl';
 
 		$server = new \SoapClient( $wsdl );
 		$details = $server->getDescription();

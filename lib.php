@@ -77,10 +77,13 @@ function auth_association_online_render_buttons()
 		return '';
 
 	$a->providerName = get_config( Constants::CONFIG_PATH, 'ao_association_name' );
-	$aoUrl           = get_config( Constants::CONFIG_PATH, 'ao_oauth_url' );
+	$aoUrl           = get_config( Constants::CONFIG_PATH, 'ao_url' );
+	$ssoPath         = get_config( Constants::CONFIG_PATH, 'ao_sso_path' );
 	$aoClientId      = get_config( Constants::CONFIG_PATH, 'ao_client_id' );
+	$scope           = get_config( Constants::CONFIG_PATH, 'ao_contacts_instance' ) . '.contact.getBasicUserDetails';
 
-	$link = $aoUrl . '/auth?client_id=' . $aoClientId . '&redirect_uri=' . $CFG->wwwroot . '/auth/association_online/ao_redirect.php&state=' . auth_association_online_get_state_token() . '&scope=clients.contact.getBasicUserDetails&response_type=code';
+	$link = trim( $aoUrl, '/' ) . '/' . trim( $ssoPath, '/' ) . '/oauth/auth?client_id=' . $aoClientId . '&redirect_uri=' . $CFG->wwwroot . '/auth/association_online/ao_redirect.php&state=' . auth_association_online_get_state_token() . '&scope=' . $scope . '&response_type=code';
+
 	$html .= '<div class="singinprovider">';
 	$html .= '<a class="ao" href="' . $link . '">';
 	$html .= get_string( 'auth_sign-in_with', Constants::PLUGIN_NAME, $a );

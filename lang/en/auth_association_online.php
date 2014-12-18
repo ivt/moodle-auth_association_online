@@ -23,20 +23,29 @@
  */
 
 $string['pluginname'] = 'Association Online';
-$string['auth_association_onlinedescription'] = 'This authnetication plugin will allow members of an Association Online website to login to Moodle with their AO account.';
+$string['auth_association_onlinedescription'] = 'This authentication plugin will allow members of an Association Online website to login to Moodle with their AO account.';
 $string['auth_user_prefix'] = 'The created user\'s username will start with this prefix. On a basic Moodle site you don\'t need to change it.';
 $string['auth_user_prefix_key'] = 'Username prefix';
 $string['auth_oauth2description'] = 'Allow a user to connect to the site with an Association Online account. The first time the user connects with an AO provider, a new account is created. <a href="'.$CFG->wwwroot.'/admin/search.php?query=authpreventaccountcreation">Prevent account creation when authenticating</a> <b>must</b> be unset.';
 $string['auth_ao_association_name_key'] = 'Association Online Association Name';
 $string['auth_ao_association_name_description'] = 'The name of the association that the AO site belongs to. This will be used for the login button, where it will say "Login with [Association Name]".';
-$string['auth_ao_client_id_key'] = 'Association Online Client ID';
+
+$string['auth_ao_url_key'] = 'URL';
+$string['auth_ao_url_description'] = 'Address of the AO site you wish to connect to (e.g. https://www.example.com).';
+
+$string['auth_ao_contacts_instance_default'] = 'clients';
+$string['auth_ao_contacts_instance_key'] = 'Contacts instance name';
+$string['auth_ao_contacts_instance_description'] = "The name of the contacts module on the AO site which will be used to authenticate users (almost always \"{$string['auth_ao_contacts_instance_default']}\", but may be different).";
+
+$string['auth_ao_client_id_key'] = 'Client ID';
 $string['auth_ao_client_id_description'] = 'To get a Client ID/Secret pair, contact your Association Online administrator.';
-$string['auth_ao_client_secret_key'] = 'Association Online Client Secret';
-$string['auth_ao_client_secret_description'] = 'See above';
-$string['auth_ao_oauth_url_key'] = 'Association Online OAuth2 URL';
-$string['auth_ao_oauth_url_description'] = 'This is the path to the OAuth2 confirmation form on the AO server. This should not include "/token" or "/auth" - Moodle will append these to the end of the URL you enter here. For example, "http://example.associationonline.com.au/oauth"';
-$string['auth_ao_soap_url_key'] = 'Association Online Web Service URL';
-$string['auth_ao_soap_url_description'] = 'This path is to the SOAP web service which will be used to request the AO users details (e.g. first name, last name, email). For example, http://example.associationonline.com.au/soap/clients/contact"';
+
+$string['auth_ao_client_secret_key'] = 'Client Secret';
+$string['auth_ao_client_secret_description'] = "See above ({$string['auth_ao_client_id_key']})";
+
+$string['auth_ao_sso_path_default'] = '/singlesignon';
+$string['auth_ao_sso_path_key'] = 'Single Sign On Path';
+$string['auth_ao_sso_path_description'] = "Path on the AO server to the SSO module (almost always '{$string['auth_ao_sso_path_default']}', but may be different).";
 
 $string['auth_association_online_settings'] = 'Settings';
 $string['couldnotauthenticate'] = 'The authentication failed - Please try to sign-in again.';

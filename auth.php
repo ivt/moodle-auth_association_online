@@ -124,7 +124,7 @@ class auth_plugin_association_online extends auth_plugin_base
 			$params[ 'redirect_uri' ]  = $CFG->wwwroot . '/auth/association_online/ao_redirect.php';
 			$params[ 'client_id' ]     = $this->config( 'ao_client_id' );
 			$params[ 'client_secret' ] = $this->config( 'ao_client_secret' );
-			$requestaccesstokenurl     = $this->config( 'ao_oauth_url' ) . "/token";
+			$requestaccesstokenurl     = trim( $this->config( 'ao_url' ), '/' ) . '/' . trim( $this->config( 'ao_sso_path' ), '/' ) . "/oauth/token";
 
 			//request by curl an access token and refresh token
 			require_once( $CFG->libdir . '/filelib.php' );
@@ -133,14 +133,19 @@ class auth_plugin_association_online extends auth_plugin_base
 			$postreturnvalues = $curl->post( $requestaccesstokenurl, $params );
 			$postreturnvalues = json_decode( $postreturnvalues );
 
-			$accesstoken      = $postreturnvalues->access_token;
+			if ( !is_object( $postreturnvalues ) )
+			{
+				throw new moodle_exception( 'couldnotgetaccesstoken', Constants::PLUGIN_NAME, '', var_export( $postreturnvalues, true ) );
+			}
+
+			$accesstoken = $postreturnvalues->access_token;
 
 			//with access token request by curl the email address
 			if ( !empty( $accesstoken ) )
 			{
 
 				//get the username matching the email
-				$url    = $this->config( 'ao_soap_url' );
+				$url    = trim( $this->config( 'ao_url' ), '/' ) . "/soap/" . $this->config( 'ao_contacts_instance' ) . '/contact';
 				$client = new SoapClient( $url . "?wsdl" );
 				$client->__setCookie( 'oauth2_access_token', $accesstoken );
 				$ao_user   = $client->getBasicUserDetails();
@@ -297,6 +302,11 @@ class auth_plugin_association_online extends auth_plugin_base
 		}
 	}
 
+	private function get_string( $name, $params = null )
+	{
+		return get_string( $name, Constants::PLUGIN_NAME, $params );
+	}
+
 	private function print_string( $name, $params = null )
 	{
 		print_string( $name, Constants::PLUGIN_NAME, $params );
@@ -327,11 +337,14 @@ class auth_plugin_association_online extends auth_plugin_base
 		if ( !isset ( $config->ao_client_secret ) )
 			$config->ao_client_secret = '';
 
-		if ( !isset ( $config->ao_oauth_url ) )
-			$config->ao_oauth_url = '';
+		if ( !isset ( $config->ao_url ) )
+			$config->ao_url = '';
 
-		if ( !isset ( $config->ao_soap_url ) )
-			$config->ao_soap_url = '';
+		if ( !isset ( $config->ao_sso_path ) )
+			$config->ao_sso_path = $this->get_string( 'auth_ao_sso_path_default' );
+
+		if ( !isset ( $config->ao_contacts_instance ) )
+			$config->ao_contacts_instance = $this->get_string( 'auth_ao_contacts_instance_default' );
 
 		if ( !isset( $config->user_prefix ) )
 			$config->user_prefix = 'association_online_user_';
@@ -425,10 +438,11 @@ class auth_plugin_association_online extends auth_plugin_base
 	function render_ao_settings( $OUTPUT, $config )
 	{
 		$this->render_setting( $OUTPUT, 'ao_association_name', $config->ao_association_name );
+		$this->render_setting( $OUTPUT, 'ao_url', $config->ao_url );
 		$this->render_setting( $OUTPUT, 'ao_client_id', $config->ao_client_id );
 		$this->render_setting( $OUTPUT, 'ao_client_secret', $config->ao_client_secret );
-		$this->render_setting( $OUTPUT, 'ao_oauth_url', $config->ao_oauth_url );
-		$this->render_setting( $OUTPUT, 'ao_soap_url', $config->ao_soap_url );
+		$this->render_setting( $OUTPUT, 'ao_contacts_instance', $config->ao_contacts_instance );
+		$this->render_setting( $OUTPUT, 'ao_sso_path', $config->ao_sso_path );
 	}
 
 	function render_setting( $OUTPUT, $setting, $value )
@@ -468,30 +482,35 @@ class auth_plugin_association_online extends auth_plugin_base
 		if ( !isset ( $config->ao_association_name ) )
 			$config->ao_association_name = '';
 
+		if ( !isset ( $config->ao_url ) )
+			$config->ao_url = '';
+
 		if ( !isset ( $config->ao_client_id ) )
 			$config->ao_client_id = '';
 
 		if ( !isset ( $config->ao_client_secret ) )
 			$config->ao_client_secret = '';
 
-		if ( !isset ( $config->ao_oauth_url ) )
-			$config->ao_oauth_url = '';
+		if ( !isset ( $config->ao_contacts_instance ) )
+			$config->ao_contacts_instance = $this->get_string( 'auth_ao_contacts_instance_default');
 
-		if ( !isset ( $config->ao_soap_url ) )
-			$config->ao_soap_url = '';
+		if ( !isset ( $config->ao_sso_path ) )
+			$config->ao_sso_path = $this->get_string( 'auth_ao_sso_path_default');
 
 		if ( !isset ( $config->user_prefix ) )
-			$config->user_prefix = 'social_user_';
+			$config->user_prefix = 'association_online_user_';
 
 		if ( !isset ( $config->oauth2displaybuttons ) )
 			$config->oauth2displaybuttons = 0;
 
 		// save settings
 		$this->set_config( 'ao_association_name', $config->ao_association_name );
+		$this->set_config( 'ao_url', $config->ao_url );
 		$this->set_config( 'ao_client_id', $config->ao_client_id );
 		$this->set_config( 'ao_client_secret', $config->ao_client_secret );
-		$this->set_config( 'ao_oauth_url', $config->ao_oauth_url );
-		$this->set_config( 'ao_soap_url', $config->ao_soap_url );
+		$this->set_config( 'ao_contacts_instance', $config->ao_contacts_instance );
+		$this->set_config( 'ao_sso_path', $config->ao_sso_path );
+		$this->set_config( 'user_prefix', $config->user_prefix );
 		$this->set_config( 'oauth2displaybuttons', $config->oauth2displaybuttons );
 
 		return true;
