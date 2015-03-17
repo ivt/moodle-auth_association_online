@@ -66,25 +66,37 @@ function auth_association_online_display_buttons()
 	echo auth_association_online_render_buttons();
 }
 
+function auth_association_online_generate_ao_auth_link()
+{
+    global $CFG;
+
+    $a = new stdClass();
+    $isEnabled = get_config( Constants::CONFIG_PATH, 'ao_client_id' );
+    if ( !is_enabled_auth( Constants::AUTH_TYPE ) || !$isEnabled )
+        return null;
+
+    $a->providerName = get_config( Constants::CONFIG_PATH, 'ao_association_name' );
+    $aoUrl           = get_config( Constants::CONFIG_PATH, 'ao_url' );
+    $ssoPath         = get_config( Constants::CONFIG_PATH, 'ao_sso_path' );
+    $aoClientId      = get_config( Constants::CONFIG_PATH, 'ao_client_id' );
+    $scope           = get_config( Constants::CONFIG_PATH, 'ao_contacts_instance' ) . '.contact.getBasicUserDetails';
+
+    return trim( $aoUrl, '/' ) . '/' . trim( $ssoPath, '/' ) . '/oauth/auth?client_id=' . $aoClientId . '&redirect_uri=' . $CFG->wwwroot . '/auth/association_online/ao_redirect.php&state=' . auth_association_online_get_state_token() . '&scope=' . $scope . '&response_type=code';
+}
+
 function auth_association_online_render_buttons()
 {
-	global $CFG;
-	$html = '';
+    $link = auth_association_online_generate_ao_auth_link();
 
-	$a = new stdClass();
-	$isEnabled = get_config( Constants::CONFIG_PATH, 'ao_client_id' );
-	if ( !is_enabled_auth( Constants::AUTH_TYPE ) || !$isEnabled )
-		return '';
+    if ( !$link )
+        return '';
 
+    $html = '';
+
+    $a = new stdClass();
 	$a->providerName = get_config( Constants::CONFIG_PATH, 'ao_association_name' );
-	$aoUrl           = get_config( Constants::CONFIG_PATH, 'ao_url' );
-	$ssoPath         = get_config( Constants::CONFIG_PATH, 'ao_sso_path' );
-	$aoClientId      = get_config( Constants::CONFIG_PATH, 'ao_client_id' );
-	$scope           = get_config( Constants::CONFIG_PATH, 'ao_contacts_instance' ) . '.contact.getBasicUserDetails';
 
-	$link = trim( $aoUrl, '/' ) . '/' . trim( $ssoPath, '/' ) . '/oauth/auth?client_id=' . $aoClientId . '&redirect_uri=' . $CFG->wwwroot . '/auth/association_online/ao_redirect.php&state=' . auth_association_online_get_state_token() . '&scope=' . $scope . '&response_type=code';
-
-	$html .= '<div class="singinprovider">';
+    $html .= '<div class="singinprovider">';
 	$html .= '<a class="ao" href="' . $link . '">';
 	$html .= get_string( 'auth_sign-in_with', Constants::PLUGIN_NAME, $a );
 	$html .= '</a></div></div>';
