@@ -29,7 +29,7 @@ on the Moodle site, then it will do the following:
 
 ### Troubleshooting
 
-#### "Auth2 connection not setup correctly"
+#### "OAuth2 connection not setup correctly"
 
 If this error appears, it is either because this plugin is [not enabled on your site](https://docs.moodle.org/28/en/Managing_authentication#Setting_the_authentication_method.28s.29),
 or the Client ID has not been specified in your Moodle settings (Administration > Site administration > Plugins > Authentication > Manage authentication > Association Online).
