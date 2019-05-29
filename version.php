@@ -26,8 +26,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version  = 2019052301;
-$plugin->requires = 2013102500;   // Requires Moodle 2.6 or later
-$plugin->release = '1.5.1 (Build: 2019052301)';
+$plugin->version  = 2019052402;
+$plugin->requires = 2018051700;   // Requires Moodle 3.5 or later. earlier commits should support version 2.6-3.4. this may support some of those versions, but i haven't tested yet.
+$plugin->release = '1.5.1 (Build: 2019052401)';
 $plugin->maturity = MATURITY_STABLE;             // this version's maturity level
 $plugin->component = 'auth_association_online';

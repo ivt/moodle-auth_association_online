@@ -32,7 +32,7 @@ class auth_plugin_association_online extends auth_plugin_base
 		$this->authtype    = 'association_online';
 		$this->roleauth    = Constants::PLUGIN_NAME;
 		$this->errorlogtag = '[AUTH ASSOCIATION ONLINE] ';
-		$this->config      = get_config( 'auth/association_online' );
+		$this->config      = get_config( Constants::CONFIG_PATH );
 	}
 
 	/**
